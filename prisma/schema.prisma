@@ -27,6 +27,7 @@ model User {
   role       Role        @default(USER)
   supabaseUid  String?      @unique @map("supabase_uid")
   chronicles chronicles[]
+  file_path String?
 }
 
 enum Role {
