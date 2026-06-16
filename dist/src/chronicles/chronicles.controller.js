@@ -25,8 +25,20 @@ let ChroniclesController = class ChroniclesController {
     constructor(chroniclesService) {
         this.chroniclesService = chroniclesService;
     }
-    create(createChronicleDto) {
-        return this.chroniclesService.create(createChronicleDto);
+    async create(createChronicleDto, req) {
+        const user = req.user;
+        console.log("--- DEBUG FINAL ---");
+        console.log("¿Existe req.user?:", !!user);
+        console.log("Objeto usuario:", user);
+        if (!user || user.userId === undefined) {
+            throw new common_1.UnauthorizedException("El sistema de autenticación no pudo identificar al usuario.");
+        }
+        if (user.isBlocked) {
+            throw new common_1.ForbiddenException("Tu cuenta está bloqueada y no puedes crear crónicas.");
+        }
+        const userId = Number(user.userId);
+        console.log("UserID procesado para el servicio:", userId);
+        return this.chroniclesService.create(createChronicleDto, user.userId || userId);
     }
     findAll() {
         return this.chroniclesService.findAll();
@@ -52,9 +64,10 @@ __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_chronicle_dto_1.CreateChronicleDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [create_chronicle_dto_1.CreateChronicleDto, Object]),
+    __metadata("design:returntype", Promise)
 ], ChroniclesController.prototype, "create", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -99,7 +112,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ChroniclesController.prototype, "remove", null);
 exports.ChroniclesController = ChroniclesController = __decorate([
-    (0, common_1.Controller)('chronicles'),
+    (0, common_1.Controller)('revista'),
     __metadata("design:paramtypes", [chronicles_service_1.ChroniclesService])
 ], ChroniclesController);
 //# sourceMappingURL=chronicles.controller.js.map

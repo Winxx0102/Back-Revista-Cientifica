@@ -16,9 +16,12 @@ let ChroniclesService = class ChroniclesService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    create(createChronicleDto) {
+    async create(createChronicleDto, userId) {
         return this.prisma.chronicles.create({
-            data: createChronicleDto,
+            data: {
+                ...createChronicleDto,
+                userId,
+            },
         });
     }
     findAll() {
@@ -52,6 +55,9 @@ let ChroniclesService = class ChroniclesService {
                 createdAt: 'desc',
             },
         });
+    }
+    async countTotal() {
+        return await this.prisma.chronicles.count();
     }
 };
 exports.ChroniclesService = ChroniclesService;

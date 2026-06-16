@@ -29,8 +29,4 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateChronicleDto.prototype, "content", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], CreateChronicleDto.prototype, "userId", void 0);
 //# sourceMappingURL=create-chronicle.dto.js.map

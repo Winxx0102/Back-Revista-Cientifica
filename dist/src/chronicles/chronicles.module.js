@@ -17,6 +17,7 @@ exports.ChroniclesModule = ChroniclesModule = __decorate([
     (0, common_1.Module)({
         controllers: [chronicles_controller_1.ChroniclesController],
         providers: [chronicles_service_1.ChroniclesService],
+        exports: [chronicles_service_1.ChroniclesService],
     })
 ], ChroniclesModule);
 //# sourceMappingURL=chronicles.module.js.map

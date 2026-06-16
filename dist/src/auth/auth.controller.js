@@ -23,7 +23,11 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async login(loginDto, res) {
-        return await this.authService.login(loginDto.email, loginDto.password, res);
+        const token = await this.authService.login(loginDto.email, loginDto.password, res);
+        return {
+            access_token: token,
+            message: 'Login exitoso'
+        };
     }
     async logout(res) {
         return await this.authService.logout(res);
@@ -36,7 +40,7 @@ exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)('login'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, swagger_1.ApiOperation)({ summary: 'Iniciar sesión y generar cookie' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Iniciar sesión y retornar token' }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),

@@ -22,18 +22,26 @@ let RolesGuard = class RolesGuard {
             context.getHandler(),
             context.getClass(),
         ]);
+        console.log('[RolesGuard] Roles requeridos:', requiredRoles);
         if (!requiredRoles || requiredRoles.length === 0) {
+            console.log('[RolesGuard] No se requieren roles, acceso permitido.');
             return true;
         }
         const request = context.switchToHttp().getRequest();
         const user = request.user;
+        console.log('[RolesGuard] Usuario detectado en el Request:', user);
         if (!user) {
+            console.log('[RolesGuard] ERROR: El usuario es undefined. ¿Pasó el JwtAuthGuard?');
             throw new common_1.ForbiddenException('No hay usuario autenticado');
         }
         const userRole = user.role;
-        if (!requiredRoles.includes(userRole)) {
-            throw new common_1.ForbiddenException(`Se requiere al menos uno de los siguientes roles: ${requiredRoles.join(', ')}. Tu rol actual: ${userRole}`);
+        console.log(`[RolesGuard] Verificando rol. Usuario tiene: '${userRole}'`);
+        const hasRole = requiredRoles.includes(userRole);
+        if (!hasRole) {
+            console.log(`[RolesGuard] ERROR: '${userRole}' no está en la lista de permitidos: [${requiredRoles.join(', ')}]`);
+            throw new common_1.ForbiddenException(`Se requiere al menos uno de estos roles: ${requiredRoles.join(', ')}. Tu rol actual: ${userRole}`);
         }
+        console.log('[RolesGuard] ¡Éxito! Rol validado correctamente.');
         return true;
     }
 };

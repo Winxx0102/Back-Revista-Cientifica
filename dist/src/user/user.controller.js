@@ -20,12 +20,14 @@ const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 const get_user_decorator_1 = require("../auth/decorators/get-user.decorator");
+const chronicles_service_1 = require("../chronicles/chronicles.service");
 let UsersController = class UsersController {
-    constructor(usersService) {
+    constructor(usersService, chroniclesService) {
         this.usersService = usersService;
+        this.chroniclesService = chroniclesService;
     }
-    findAll(query) {
-        return this.usersService.findAll(query);
+    async findAll(query) {
+        return await this.usersService.findAll(query);
     }
     create(createUserDto) {
         return this.usersService.create(createUserDto);
@@ -46,14 +48,26 @@ let UsersController = class UsersController {
     async updateRole(id, role) {
         return this.usersService.updateRole(id, role);
     }
+    async getStats() {
+        const totalUsers = await this.usersService.countTotal();
+        const blockedUsers = await this.usersService.countBlocked();
+        const totalchronicles = await this.chroniclesService.countTotal();
+        return {
+            totalchronicles,
+            totalUsers,
+            blockedUsers,
+        };
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
     (0, common_1.Get)(''),
+    (0, roles_decorator_1.Roles)(user_dto_1.Role.ADMIN, user_dto_1.Role.SUPERADMIN),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Post)('register'),
@@ -80,7 +94,7 @@ __decorate([
 ], UsersController.prototype, "getUserRole", null);
 __decorate([
     (0, common_1.Patch)('block/:id'),
-    (0, roles_decorator_1.Roles)(user_dto_1.Role.ADMIN),
+    (0, roles_decorator_1.Roles)(user_dto_1.Role.ADMIN, user_dto_1.Role.SUPERADMIN),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -88,7 +102,7 @@ __decorate([
 ], UsersController.prototype, "blockUser", null);
 __decorate([
     (0, common_1.Patch)('unblock/:id'),
-    (0, roles_decorator_1.Roles)(user_dto_1.Role.ADMIN),
+    (0, roles_decorator_1.Roles)(user_dto_1.Role.ADMIN, user_dto_1.Role.SUPERADMIN),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -96,7 +110,7 @@ __decorate([
 ], UsersController.prototype, "unBlockUser", null);
 __decorate([
     (0, common_1.Patch)('role/:id'),
-    (0, roles_decorator_1.Roles)(user_dto_1.Role.ADMIN),
+    (0, roles_decorator_1.Roles)(user_dto_1.Role.SUPERADMIN),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)('role')),
@@ -104,8 +118,17 @@ __decorate([
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateRole", null);
+__decorate([
+    (0, common_1.Get)('admin/stats'),
+    (0, roles_decorator_1.Roles)(user_dto_1.Role.ADMIN, user_dto_1.Role.SUPERADMIN),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getStats", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [user_service_1.UsersService])
+    __metadata("design:paramtypes", [user_service_1.UsersService,
+        chronicles_service_1.ChroniclesService])
 ], UsersController);
 //# sourceMappingURL=user.controller.js.map

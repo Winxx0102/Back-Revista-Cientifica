@@ -56,16 +56,25 @@ let AuthService = class AuthService {
         res.clearCookie('jwt');
         return { message: 'Sesión Cerrada', status: 'success' };
     }
-    async login(email, pass, res) {
-        console.log("--- Intento de Login ---");
-        console.log("Email recibido:", email);
+    async validateUser(email, password) {
         const user = await this.prisma.user.findUnique({ where: { email } });
         if (!user) {
-            console.log("Error: Usuario no encontrado en BD");
-            throw new common_1.UnauthorizedException('Usuario no encontrado');
+            return null;
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return null;
+        }
+        return user;
+    }
+    async login(email, pass, res) {
+        console.log("--- Intento de Login ---");
+        const user = await this.prisma.user.findUnique({ where: { email } });
+        if (!user) {
+            console.log("Error: Usuario no encontrado");
+            throw new common_1.UnauthorizedException('Credenciales incorrectas');
         }
         const isMatch = await bcrypt.compare(pass, user.password);
-        console.log("¿Contraseña coincide?:", isMatch);
         if (!isMatch) {
             console.log("Error: Contraseña incorrecta");
             throw new common_1.UnauthorizedException('Credenciales incorrectas');
@@ -74,12 +83,16 @@ let AuthService = class AuthService {
         const token = this.jwtService.sign(payload);
         res.cookie('jwt', token, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
             path: '/',
+            maxAge: 2 * 60 * 60 * 1000
         });
-        console.log("Login exitoso, cookie enviada.");
-        return { state: 'success', message: 'Login exitoso' };
+        return {
+            state: 'success',
+            message: 'Login exitoso',
+            user: { email: user.email, role: user.role }
+        };
     }
 };
 exports.AuthService = AuthService;

@@ -5,14 +5,18 @@ export declare class UsersService {
     private prisma;
     constructor(prisma: PrismaService);
     findAll(query: any): Promise<{
-        data: {
-            id: number;
+        data: ({
+            _count: {
+                chronicles: number;
+            };
+        } & {
             email: string;
-            name: string;
             password: string;
+            id: number;
+            name: string;
             isBlocked: boolean;
             role: import(".prisma/client").$Enums.Role;
-        }[];
+        })[];
         totalPages: number;
     }>;
     blockUser(id: number): Promise<{
@@ -24,22 +28,22 @@ export declare class UsersService {
         message: string;
     }>;
     create(createUserDto: CreateUserDto): Promise<{
-        id: number;
         email: string;
+        id: number;
         name: string;
         role: import(".prisma/client").$Enums.Role;
     }>;
     findByEmail(email: string): Promise<{
-        id: number;
         email: string;
-        name: string;
         password: string;
+        id: number;
+        name: string;
         isBlocked: boolean;
         role: import(".prisma/client").$Enums.Role;
     }>;
     updateRole(id: number, newRole: Role): Promise<{
-        id: number;
         email: string;
+        id: number;
         role: import(".prisma/client").$Enums.Role;
     }>;
     getUserRole(id: number): Promise<{
@@ -48,16 +52,18 @@ export declare class UsersService {
     findOne(id: number): Promise<{
         chronicles: {
             id: number;
-            userId: number;
             title: string;
             author: string;
             content: string;
             createdAt: Date;
+            userId: number;
         }[];
-        id: number;
         email: string;
+        id: number;
         name: string;
         isBlocked: boolean;
         role: import(".prisma/client").$Enums.Role;
     }>;
+    countTotal(): Promise<number>;
+    countBlocked(): Promise<number>;
 }

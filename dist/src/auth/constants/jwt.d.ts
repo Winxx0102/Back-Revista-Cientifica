@@ -1,1 +1,1 @@
-export declare const JWT_SECRET = "kasofjaospfjapofjaspokfpoaskfokk9023k9";
+export declare const JWT_SECRET = "Winxx0102";

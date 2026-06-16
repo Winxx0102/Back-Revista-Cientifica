@@ -66,7 +66,16 @@ let UsersService = class UsersService {
                 { email: { contains: search } }
             ];
         }
-        const data = await this.prisma.user.findMany({ where, take, skip });
+        const data = await this.prisma.user.findMany({
+            where,
+            take,
+            skip,
+            include: {
+                _count: {
+                    select: { chronicles: true }
+                }
+            }
+        });
         const totalPages = await this.prisma.user.count({ where });
         return { data, totalPages };
     }
@@ -144,6 +153,14 @@ let UsersService = class UsersService {
             throw new common_1.NotFoundException('Usuario no encontrado');
         const { password, ...result } = user;
         return result;
+    }
+    async countTotal() {
+        return await this.prisma.user.count();
+    }
+    async countBlocked() {
+        return await this.prisma.user.count({
+            where: { isBlocked: true }
+        });
     }
 };
 exports.UsersService = UsersService;

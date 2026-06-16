@@ -17,7 +17,7 @@ interface RequestWithUser extends Request {
   };
 }
 
-@Controller('chronicles')
+@Controller('revista')
 export class ChroniclesController {
   constructor(private readonly chroniclesService: ChroniclesService) {}
 
