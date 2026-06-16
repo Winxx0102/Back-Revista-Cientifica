@@ -1,5 +1,5 @@
 // chronicles/dto/create-chronicle.dto.ts
-import { IsString, IsInt, IsNotEmpty } from 'class-validator';
+import { IsString, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateChronicleDto {
   @IsString()
@@ -14,4 +14,8 @@ export class CreateChronicleDto {
   @IsNotEmpty()
   content: string;
 
+
+  @IsString()
+  @IsOptional() // Lo ponemos opcional por si subes crónicas antiguas sin archivo
+  file_path?: string;
 }
