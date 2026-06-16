@@ -87,3 +87,5 @@ async getMyChronicles(@Req() req: any) {
     return this.chroniclesService.remove(+id);
   }
 }
+ //xdddd
+ 
