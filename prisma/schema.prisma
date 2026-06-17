@@ -1,13 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  //engineType      = "library"
-  //  engineType="binary"
 }
 
 datasource db {
@@ -15,34 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-//usuarios,roles y libros guardados xd xd
-
 model User {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique
-  name       String
-  password   String
-  isBlocked  Boolean     @default(false)
-  role       Role        @default(USER)
-  supabaseUid  String?      @unique @map("supabase_uid")
-  chronicles chronicles[]
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String
+  password    String
+  isBlocked   Boolean      @default(false)
+  role        Role         @default(USER)
+  supabaseUid String?      @unique @map("supabase_uid")
+  file_path   String?
+  chronicles  chronicles[]
+}
+
+model chronicles {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    String
+  content   String
+  createdAt DateTime @default(now())
+  userId    Int
   file_path String?
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum Role {
   USER
   ADMIN
   SUPERADMIN
-}
-
-
-model chronicles{
-  id         Int         @id @default(autoincrement())
-  title      String
-  author     String
-  content    String
-  createdAt  DateTime    @default(now())
-  userId     Int
-  user       User        @relation(fields: [userId], references: [id])
 }
