@@ -16,7 +16,7 @@ datasource db {
 }
 
 
-//usuarios,roles y libros guardados xd
+//usuarios,roles y libros guardados xd xd
 
 model User {
   id         Int         @id @default(autoincrement())
