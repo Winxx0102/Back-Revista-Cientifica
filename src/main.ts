@@ -7,7 +7,27 @@ import helmet from 'helmet';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(helmet());
+ app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        // Mantenemos tus configuraciones actuales
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: [
+          "'self'", 
+          "https://revista-cientifica-by-winxx0102.onrender.com", 
+          "https://citlayiapryuepjhdofv.supabase.co"
+        ],
+        // AGREGAMOS ESTA LÍNEA CRÍTICA PARA EL PDF:
+        frameSrc: ["'self'", "https://citlayiapryuepjhdofv.supabase.co"],
+      },
+    },
+  }),
+);
  app.enableCors({
     // Define explícitamente tu dominio, NO uses 'true'
     origin: [true], // Incluye tu localhost para desarrollo
