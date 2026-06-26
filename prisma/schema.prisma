@@ -27,6 +27,10 @@ model chronicles {
   createdAt DateTime @default(now())
   userId    Int
   file_path String?
+  correo            String?
+materia           String?
+palabras_claves   String?
+year_presentacion String?
   user      User     @relation(fields: [userId], references: [id])
 }
 

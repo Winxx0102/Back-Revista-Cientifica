@@ -18,4 +18,22 @@ export class CreateChronicleDto {
   @IsString()
   @IsOptional() // Lo ponemos opcional por si subes crónicas antiguas sin archivo
   file_path?: string;
+
+
+
+  @IsOptional() 
+  @IsString()
+  correo?:            string;
+
+  @IsOptional() 
+    @IsString()
+  materia?:           string;
+
+  @IsOptional() 
+    @IsString()
+  palabras_claves?:   string;
+
+  @IsOptional() 
+    @IsString()
+  year_presentacion?: string;
 }
