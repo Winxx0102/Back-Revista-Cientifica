@@ -36,4 +36,5 @@ export class CreateChronicleDto {
   @IsOptional() 
     @IsString()
   year_presentacion?: string;
+  //hola
 }
