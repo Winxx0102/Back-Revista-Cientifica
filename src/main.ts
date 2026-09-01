@@ -46,4 +46,20 @@ async function bootstrap() {
   console.log(`🚀 Application is running on: http://0.0.0.0:${port}`);
 }
 
+// Truco para evitar que Render duerma el servidor por inactividad
+const appUrl = process.env.RENDER_EXTERNAL_URL || 'https://revista-cientifica-by-winxx0102.onrender.com/';
+
+setInterval(async () => {
+  try {
+    await fetch(appUrl);
+    console.log('Ping de actividad enviado para mantener activo el servidor');
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error en el auto-ping:', error.message);
+    } else {
+      console.error('Error en el auto-ping:', error);
+    }
+  }
+}, 10 * 60 * 1000); // Cada 10 minutos
+
 bootstrap();
