@@ -27,7 +27,7 @@ async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Respons
 }
 
   @Get('logout')
-  @UseGuards(JwtAuthGuard)
+
   @ApiOperation({ summary: 'Cerrar sesión y limpiar cookie' })
   async logout(@Res({ passthrough: true }) res: Response) {
     return await this.authService.logout(res);
