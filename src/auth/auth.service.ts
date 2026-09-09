@@ -42,7 +42,10 @@ export class AuthService {
       console.log("Error: Usuario no encontrado");
       throw new UnauthorizedException('Credenciales incorrectas');
     }
-
+if (user.isBlocked) {
+      console.log("Error: Usuario bloqueado intentando acceder");
+      throw new UnauthorizedException('Su usuario está bloqueado. Comuníquese con el comité editorial.');
+    }
     const isMatch = await bcrypt.compare(pass, user.password);
     if (!isMatch) {
       console.log("Error: Contraseña incorrecta");
