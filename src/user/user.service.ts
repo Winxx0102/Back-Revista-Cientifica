@@ -21,6 +21,15 @@ export class UsersService {
 
   constructor(private prisma: PrismaService) { }
 
+
+async deleteUser(id: number) {
+    await this.findOne(id);
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
+
+
   async findAll(query: any) {
     const search = query.search || '';
     const where: any = {};

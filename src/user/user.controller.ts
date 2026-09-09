@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, ParseIntPipe, UseGuards, Get, Req, Query } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, ParseIntPipe, UseGuards, Get, Req, Query, Delete } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { CreateUserDto, Role } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -67,6 +67,12 @@ export class UsersController {
     return this.usersService.updateRole(id, role);
   }
 
+ @Delete(':id')
+  @Roles(Role.SUPERADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.deleteUser(id);
+  }
 
   @Get('admin/stats')
 @Roles(Role.ADMIN, Role.SUPERADMIN) // Solo admin y superadmin pueden ver métricas
